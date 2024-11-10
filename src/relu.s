@@ -29,6 +29,23 @@ relu:
 
 loop_start:
     # TODO: Add your own implementation
+    # mv t0, a0   # tmp addr for a0
+
+    # x & ~(x>>31)
+    lw t0, 0(a0)
+    srai t1, t0, 31
+    xori t1, t1, -1
+    and t0, t0, t1
+    
+    # storing element to original address
+    sw t0, 0(a0)
+    
+    addi a0, a0, 4  # moving to next element
+    addi a1, a1, -1 # index--
+    bgez a1, loop_start
+
+loop_end:
+    ret
 
 error:
     li a0, 36          

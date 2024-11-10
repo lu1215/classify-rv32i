@@ -22,7 +22,11 @@ abs:
     bge t0, zero, done
 
     # TODO: Add your own implementation
-
+    # doing 2's complement
+    xori t0, t0, -1 # 1's complement
+    addi t0, t0, 1  # result of 1's complement plus 1
+    sw t0, 0(a0)
+    
 done:
     # Epilogue
     jr ra

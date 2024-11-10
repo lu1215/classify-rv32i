@@ -31,6 +31,41 @@ argmax:
     li t2, 1
 loop_start:
     # TODO: Add your own implementation
+    # prologue
+    blez a1, argmaxend
+    addi sp, sp, -20
+    sw t0, 0(sp)    # temp maximum
+    sw t1, 4(sp)    # temp index
+    sw t2, 8(sp)    # current value
+    sw t3, 12(sp)   # recording result of copmaring
+    sw t4, 16(sp)   # recording index
+    lw t0, 0(a0)    # initinalize temp maximum to first element
+    addi t1, x0, 0     # initinalize temp index to 0
+    addi t4, a1, 0     # set index = len of array
+    
+argmaxloop:
+    blez t4, argmaxend     # index >= 0, keep finding, else go to end
+    lw t2, 0(a0)           # load current value
+    slt t3, t0, t2         # comparing temp maximum and current value
+    beqz t3, skip_changing # if cur value < max, t3 = 1, do nothing
+    sub t1, a1, t4         # changing index to current index
+    addi t0, t2, 0         # changing maximum to current value
+
+skip_changing:
+    addi a0, a0, 4     # addr += 4
+    addi t4, t4, -1    # index -= 1
+    j argmaxloop
+    
+argmaxend:
+    # epilogue
+    addi a0, t1, 0
+    lw t0, 0(sp)
+    lw t1, 4(sp)
+    lw t2, 8(sp)
+    lw t3, 12(sp)
+    lw t4, 16(sp)
+    addi sp, sp, 20
+    jr ra
 
 handle_error:
     li a0, 36
