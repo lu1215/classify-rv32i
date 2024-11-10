@@ -1,4 +1,4 @@
-# .import ./mul.s
+.import ./mul.s
 .globl dot
 
 .text
@@ -35,33 +35,46 @@ dot:
     li t0, 0            
     li t1, 0         
 
-    addi sp, sp, -24 
+    addi sp, sp, -40 
     sw t0, 0(sp)
     sw t1, 4(sp)
     sw t2, 8(sp)
     sw a0, 12(sp)
     sw a1, 16(sp)
     sw ra, 20(sp)
+    
+
+loop_start:
+    bge t1, a2, loop_end
+    # TODO: Add your own implementation
     # making stride become real stride in memory address
     slli a3, a3, 2
     slli a4, a4, 2
     addi t2, x0, 0    # making sum = 0 in the start
 
-loop_start:
-    bge t1, a2, loop_end
-    # TODO: Add your own implementation
-
 loop:    
     lw t0, 0(a0)    # get value from v0
     lw t1, 0(a1)    # get value from v1
+    
     sw a0, 12(sp)    # storing a0, a1 into stack
     sw a1, 16(sp)
+    sw t2, 24(sp)
+    sw a2, 28(sp) 
+    sw a3, 32(sp) 
+    sw a4, 36(sp)
+
     addi a0, t0, 0
     addi a1, t1, 0
     jal shif_add
     addi t0, a0, 0
+
     lw a0, 12(sp)    # storing a0, a1 into stack
     lw a1, 16(sp)
+    lw t2, 24(sp)
+    lw a2, 28(sp) 
+    lw a3, 32(sp) 
+    lw a4, 36(sp)
+
     add t2, t2, t0    # summing up values
     add a0, a0, a3    # addr += stride of v0
     add a1, a1, a4    # addr += stride of v1
@@ -75,7 +88,7 @@ loop_end:
     lw t1, 4(sp)
     lw t2, 8(sp)
     lw ra, 20(sp)
-    addi sp, sp, 24
+    addi sp, sp, 40
     jr ra
 
 error_terminate:
@@ -86,32 +99,3 @@ error_terminate:
 set_error_36:
     li a0, 36
     j exit
-
-# multiplier
-shif_add:
-    # Prologue
-    addi sp, sp, -8
-    sw t0, 0(sp)    # sum
-    sw t1, 4(sp)    # tmp value for Multiplication
-    addi t0, x0, 0    # initinalize sum = 0
-    beqz a0, mul_end    # a = 0 or b = 0, result is zero
-    beqz a1, mul_end
-    
-calculating:
-    andi t1, a1, 1    # get rightmost bit of b
-    beqz t1, skip_add    # if t1 = 0, t0 doesn't need to add a0
-    add t0, t0, a0
-    
-skip_add:
-    slli a0, a0, 1    # left shift a0 1 bit 
-    srai a1, a1, 1    # right shift a1 1 bit
-    beqz a0, mul_end    # when a1 = negative number, a1 will never become zero , so adding a new condition
-    bnez a1, calculating    # if a1 = 0, calculation end, else continue calculating
-    
-mul_end:
-    # Epilogue
-    addi a0, t0, 0
-    lw t0, 0(sp)
-    lw t1, 4(sp)
-    addi sp, sp, 8
-    jr ra    # return
