@@ -1,3 +1,4 @@
+.import ./mul.s
 .globl read_matrix
 
 .text
@@ -76,6 +77,18 @@ read_matrix:
 
     # mul s1, t1, t2   # s1 is number of elements
     # FIXME: Replace 'mul' with your own implementation
+    addi sp, sp, -8
+    sw a0, 0(sp)
+    sw a1, 4(sp)
+    addi a0, t1, 0
+    addi a1, t2, 0
+
+    jal shif_add
+
+    addi s1, a0, 0
+    lw a0, 0(sp)
+    lw a1, 4(sp)
+    addi sp, sp, 8
 
     slli t3, s1, 2
     sw t3, 24(sp)    # size in bytes
