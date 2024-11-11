@@ -1,3 +1,4 @@
+.import ./mul.s
 .globl classify
 
 .text
@@ -166,7 +167,12 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    # addi a0, t0, 0
+    # addi a1, t1, 0
+
+    # jal shif_add    # calling mul function
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -205,7 +211,13 @@ classify:
     lw t1, 0(s8)
     # mul a1, t0, t1 # length of h array and set it as second argument
     # FIXME: Replace 'mul' with your own implementation
+    # addi a0, t0, 0
+    # addi a1, t1, 0
+
+    # jal shif_add    # calling mul function
     
+    # addi a1, a0, 0
+
     jal relu
     
     lw a0, 0(sp)
@@ -227,6 +239,12 @@ classify:
     lw t0, 0(s3)
     lw t1, 0(s6)
     # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    # addi a0, t0, 0
+    # addi a1, t1, 0
+
+    # jal shif_add    # calling mul function
+
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -286,8 +304,18 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    mul a1, t0, t1 # load length of array into second arg
+    # mul a1, t0, t1 # load length of array into second arg
     # FIXME: Replace 'mul' with your own implementation
+    # addi sp, sp, -4 
+    # sw a0, 0(sp)
+    # addi a0, t0, 0
+    # addi a1, t1, 0
+
+    # jal shif_add    # calling mul function
+    
+    # addi a1, a0, 0
+    # lw a0, 0(sp)
+    # addi sp, sp, 4
     
     jal argmax
     

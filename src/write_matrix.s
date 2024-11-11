@@ -1,3 +1,4 @@
+.import ./mul.s
 .globl write_matrix
 
 .text
@@ -63,6 +64,18 @@ write_matrix:
 
     # mul s4, s2, s3   # s4 = total elements
     # FIXME: Replace 'mul' with your own implementation
+    addi sp, sp, -8 
+    sw a0, 0(sp)
+    sw a1, 4(sp)
+    addi a0, s2, 0
+    addi a1, s3, 0
+
+    jal shif_add    # calling mul function
+
+    addi s4, a0, 0
+    lw a0, 0(sp)
+    lw a1, 4(sp)
+    addi sp, sp, 8
 
     # write matrix data to file
     mv a0, s0
