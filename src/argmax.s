@@ -22,6 +22,14 @@
 #   - Terminates program with exit code 36 if array length < 1
 # =================================================================
 argmax:
+    # addi sp, sp, -24
+    # sw t0, 0(sp)    # temp maximum
+    # sw t1, 4(sp)    # temp index
+    # sw t2, 8(sp)    # current value
+    # sw t3, 12(sp)   # recording result of copmaring
+    # sw t4, 16(sp)   # recording index
+    # sw t6, 20(sp)   # recording index
+
     li t6, 1
     blt a1, t6, handle_error
 
@@ -29,16 +37,12 @@ argmax:
 
     li t1, 0
     li t2, 1
+    
+    
 loop_start:
     # TODO: Add your own implementation
     # prologue
     blez a1, argmaxend
-    addi sp, sp, -20
-    sw t0, 0(sp)    # temp maximum
-    sw t1, 4(sp)    # temp index
-    sw t2, 8(sp)    # current value
-    sw t3, 12(sp)   # recording result of copmaring
-    sw t4, 16(sp)   # recording index
     lw t0, 0(a0)    # initinalize temp maximum to first element
     addi t1, x0, 0     # initinalize temp index to 0
     addi t4, a1, 0     # set index = len of array
@@ -59,12 +63,13 @@ skip_changing:
 argmaxend:
     # epilogue
     addi a0, t1, 0
-    lw t0, 0(sp)
-    lw t1, 4(sp)
-    lw t2, 8(sp)
-    lw t3, 12(sp)
-    lw t4, 16(sp)
-    addi sp, sp, 20
+    # lw t0, 0(sp)
+    # lw t1, 4(sp)
+    # lw t2, 8(sp)
+    # lw t3, 12(sp)
+    # lw t4, 16(sp)
+    # lw t6, 20(sp)
+    # addi sp, sp, 24
     jr ra
 
 handle_error:

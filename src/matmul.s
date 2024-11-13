@@ -45,7 +45,6 @@ matmul:
     # Prologue
     addi sp, sp, -28
     sw ra, 0(sp)
-    
     sw s0, 4(sp)
     sw s1, 8(sp)
     sw s2, 12(sp)
@@ -64,7 +63,6 @@ outer_loop_start:
     li s1, 0
     mv s4, a3
     blt s0, a1, inner_loop_start
-
     j outer_loop_end
     
 inner_loop_start:

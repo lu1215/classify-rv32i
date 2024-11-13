@@ -1,5 +1,3 @@
-.import ./mul.s
-# .import ./mulvtwo.s
 .globl classify
 
 .text
@@ -168,13 +166,7 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
-    # mul part #
-    addi a0, t0, 0
-    addi a1, t1, 0
-    jal shif_add    # calling mul function
-    # mul part #
-    
+    mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -211,28 +203,9 @@ classify:
     mv a0, s9 # move h to the first argument
     lw t0, 0(s3)
     lw t1, 0(s8)
-    ## test pat ##
-    # # li a0, 15
-    # addi sp, sp, -4
-    # sw a0, 0(sp)
-    # mv a0, s3
-    # # mv a1, t1
-    # # lw a0, 0(a0)
-    # lw a0, 0(sp)
-    # addi sp, sp, 4
-    ## test part ##
-    # mul a1, t0, t1 # length of h array and set it as second argument
+    mul a1, t0, t1 # length of h array and set it as second argument
     # FIXME: Replace 'mul' with your own implementation
-    # mul part #
-    addi sp, sp, -4
-    sw a2, 0(sp)
-    addi a1, t0, 0
-    addi a2, t1, 0
-    jal shif_add_aone    # calling mul function
-    lw a2, 0(sp)
-    addi sp, sp, 4
-    # mul part #
-
+    
     jal relu
     
     lw a0, 0(sp)
@@ -253,13 +226,7 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s6)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
-    # mul part #
-    addi a0, t0, 0
-    addi a1, t1, 0
-    jal shif_add    # calling mul function
-    # mul part #
-
+    mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -319,19 +286,9 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    # mul a1, t0, t1 # load length of array into second arg
+    mul a1, t0, t1 # load length of array into second arg
     # FIXME: Replace 'mul' with your own implementation
-    # mul part #
-    addi sp, sp, -4
-    sw a2, 0(sp)
-    addi a1, t0, 0
-    addi a2, t1, 0
-    jal shif_add_aone    # calling mul function
-    lw a2, 0(sp)
-    addi sp, sp, 4
-    # mul part #
-
-
+    
     jal argmax
     
     mv t0, a0 # move return value of argmax into t0
@@ -427,47 +384,3 @@ error_args:
 error_malloc:
     li a0, 26
     j exit
-
-
-# =======================================================
-# FUNCTION: Multiplication using shift and add
-#
-# Calculates a * b
-#    a
-# *  b
-# ----
-# 
-# Args:
-#   a1 (int): Multiplicand
-#   a2 (int): Multiplier
-#
-# Returns:
-#   a1 (int):   Resulting multiplication value
-#
-# Preconditions:
-#   - ?
-#
-# Error Handling:
-#   - ?
-# =======================================================
-shif_add_aone:
-    # Prologue
-    addi t0, x0, 0    # initinalize sum = 0
-    beqz a1, mul_end_aone    # a = 0 or b = 0, result is zero
-    beqz a2, mul_end_aone
-    
-calculating_aone:
-    andi t1, a2, 1    # get rightmost bit of b
-    beqz t1, skip_add_aone    # if t1 = 0, t0 doesn't need to add a1
-    add t0, t0, a1
-    
-skip_add_aone:
-    slli a1, a1, 1    # left shift a1 1 bit 
-    srai a2, a2, 1    # right shift a2 1 bit
-    beqz a1, mul_end_aone    # when a2 = negative number, a2 will never become zero , so adding a new condition
-    bnez a2, calculating_aone    # if a2 = 0, calculation end, else continue calculating
-    
-mul_end_aone:
-    # Epilogue
-    addi a1, t0, 0
-    jr ra    # return

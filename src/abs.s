@@ -17,6 +17,8 @@
 abs:
     # Prologue
     ebreak
+    # addi sp, sp, -4
+    # sw t0, 0(sp)
     # Load number from memory
     lw t0 0(a0)
     bge t0, zero, done
@@ -26,7 +28,9 @@ abs:
     xori t0, t0, -1 # 1's complement
     addi t0, t0, 1  # result of 1's complement plus 1
     sw t0, 0(a0)
-    
+
 done:
     # Epilogue
+    # lw t0, 0(sp)
+    # addi sp, sp, 4
     jr ra

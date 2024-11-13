@@ -35,13 +35,16 @@ dot:
     li t0, 0            
     li t1, 0         
 
-    addi sp, sp, -40 
+    addi sp, sp, -36
     sw t0, 0(sp)
     sw t1, 4(sp)
     sw t2, 8(sp)
     sw a0, 12(sp)
     sw a1, 16(sp)
     sw ra, 20(sp)
+    sw a2, 24(sp)
+    sw a3, 28(sp)
+    sw a4, 32(sp)
     
 
 loop_start:
@@ -51,31 +54,45 @@ loop_start:
     slli a3, a3, 2
     slli a4, a4, 2
     addi t2, x0, 0    # making sum = 0 in the start
+    # reducing times of lw and sw
+    addi sp, sp, -8 # make sure to store slli a3, a3, 2 and slli a4, a4, 2
+    sw a3, 0(sp)
+    sw a4, 4(sp)
+
 
 loop:    
-    lw t0, 0(a0)    # get value from v0
-    lw t1, 0(a1)    # get value from v1
+    # lw t0, 0(a0)    # get value from v0
+    # lw t1, 0(a1)    # get value from v1
     
-    sw a0, 12(sp)    # storing a0, a1 into stack
-    sw a1, 16(sp)
-    sw t2, 24(sp)
-    sw a2, 28(sp) 
-    sw a3, 32(sp) 
-    sw a4, 36(sp)
+    addi sp, sp, -16
+    sw a0, 0(sp)    # storing a0, a1 into stack
+    sw a1, 4(sp)
+    sw t2, 8(sp)
+    sw a2, 12(sp) 
+    # sw a3, 16(sp)
+    # sw a4, 20(sp)
 
-    addi a0, t0, 0
-    addi a1, t1, 0
+    # addi a0, t0, 0
+    # addi a1, t1, 0
+    lw a0, 0(a0)    # this instruction can derived from lw t0, 0(a0) and addi a0, t0, 0
+    lw a1, 0(a1)    # this instruction can derived from lw t1, 0(a1) and addi a1, t1, 0
+
     jal shif_add
-    addi t0, a0, 0
+    # addi t0, a0, 0
+    lw t2, 8(sp)
+    add t2, t2, a0    # summing up values, and derived from add t2, t2, a0 and addi t0, a0, 0
 
-    lw a0, 12(sp)    # storing a0, a1 into stack
-    lw a1, 16(sp)
-    lw t2, 24(sp)
-    lw a2, 28(sp) 
-    lw a3, 32(sp) 
-    lw a4, 36(sp)
+    lw a0, 0(sp)    # storing a0, a1 into stack
+    lw a1, 4(sp)
+    lw a2, 12(sp)
+    # lw a3, 16(sp)
+    # lw a4, 20(sp) 
+    addi sp, sp, 16
 
-    add t2, t2, t0    # summing up values
+    lw a3, 0(sp)
+    lw a4, 4(sp)
+    
+    # add t2, t2, t0    # summing up values
     add a0, a0, a3    # addr += stride of v0
     add a1, a1, a4    # addr += stride of v1
     addi a2, a2, -1    # index--
@@ -83,12 +100,17 @@ loop:
     addi t0, t2, 0
 
 loop_end:
+    addi sp, sp, 8  # make sure to clean up the stack for storing slli a3, a3, 2 and slli a4, a4, 2
     mv a0, t0
     lw t0, 0(sp)
     lw t1, 4(sp)
     lw t2, 8(sp)
+    lw a1, 16(sp)
     lw ra, 20(sp)
-    addi sp, sp, 40
+    lw a2, 24(sp)
+    lw a3, 28(sp)
+    lw a4, 32(sp)
+    addi sp, sp, 36
     jr ra
 
 error_terminate:

@@ -26,7 +26,7 @@
 # ==============================================================================
 write_matrix:
     # Prologue
-    addi sp, sp, -44
+    addi sp, sp, -32
     sw ra, 0(sp)
     sw s0, 4(sp)
     sw s1, 8(sp)
@@ -73,8 +73,8 @@ write_matrix:
     jal shif_add    # calling mul function
 
     addi s4, a0, 0
-    lw a0, 0(sp)
-    lw a1, 4(sp)
+    sw a0, 0(sp)
+    sw a1, 4(sp)
     addi sp, sp, 8
 
     # write matrix data to file
@@ -101,7 +101,7 @@ write_matrix:
     lw s2, 12(sp)
     lw s3, 16(sp)
     lw s4, 20(sp)
-    addi sp, sp, 44
+    addi sp, sp, 32
 
     jr ra
 
