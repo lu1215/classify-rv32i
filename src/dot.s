@@ -101,8 +101,8 @@ loop:
 
 loop_end:
     addi sp, sp, 8  # make sure to clean up the stack for storing slli a3, a3, 2 and slli a4, a4, 2
-    addi a0, t2
-    # mv a0, t0
+    mv a0, t2
+    # mv a0, t2
     lw t0, 0(sp)
     lw t1, 4(sp)
     lw t2, 8(sp)
