@@ -97,11 +97,12 @@ loop:
     add a1, a1, a4    # addr += stride of v1
     addi a2, a2, -1    # index--
     bgtz a2, loop    # if index <= 0, go to dot_end label
-    addi t0, t2, 0
+    # addi t0, t2, 0
 
 loop_end:
     addi sp, sp, 8  # make sure to clean up the stack for storing slli a3, a3, 2 and slli a4, a4, 2
-    mv a0, t0
+    addi a0, t2
+    # mv a0, t0
     lw t0, 0(sp)
     lw t1, 4(sp)
     lw t2, 8(sp)
