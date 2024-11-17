@@ -110,7 +110,7 @@ main:
     li t2, 16              # expected result
     bne a0, t2, fail       # if a0 != 16, fail
 
-    # 所有測試通過
+    # all test pass
     la a0, message              # a0 = addr message
     li a7, 4                    # a7 = 4 (syscall code for print string in RARS)
     ecall
