@@ -13,6 +13,7 @@ addi t0, t0, 1  # result of 1's complement plus 1
 
 ### Multiplication
 utilizing the shift and add technique to practice RISC-V multiplication, and stopping the operation by verifying that either a0 or a1 is zero.
+
 **mul.s**
 ```s
 .globl shif_add
@@ -64,6 +65,7 @@ mul_end:
 ```
 
 To check for correctness of shif_add, we used scenario 1: one input is zero, case 2: multiple two positive numbers, case 3: multiple one positive number and one negative, and case 4: two negative numbers.
+
 **test code for mul.s**
 ```s
 .import ./mul.s
@@ -171,6 +173,7 @@ Copyright notice: Unless otherwise noted, all articles in this blog are licensed
 
 #### idea
 utilizing a for loop to iterate through each element, storing the local maximum in one temp and the index of the maximum value in another.
+
 **argmax.s**
 ```s
 loop_start:
@@ -394,6 +397,7 @@ mul_end_aone:
     addi a1, t0, 0
     jr ra    # return
 ```
+
 ```s
 # mul a1, t0, t1 # load length of array into second arg
 # FIXME: Replace 'mul' with your own implementation
